@@ -1,21 +1,20 @@
+from turtle import Screen, Turtle
 import random
-import turtle
-from turtle import Screen, Turtle, left
 import time
 import math
 import numpy
 
 # Padrões da tela
-SCREEN_SIZE = 800
-METRO = 4           # 1m = 2px
-DOTSIZE1 = 5        # Pontos de trajetória
-DOTSIZE2 = 10       # Início/Fim
+SCREEN_SIZE = 800   # Tamanho da janela (800px x 800px)
+METRO = 4           # Proporção (1m = 4px)
+DOTSIZE1 = 5        # Diâmetro dos pontos de Trajetória (em px)
+DOTSIZE2 = 10       # Diâmetro dos pontos de Destino (em px)
 
 # Configurações da Simulação
-PASSO = 0.5         # Menor passo -> mais pontos
-PARADA = 5          # Quanto antes o drone diminui a velocidade antes da curva
+PASSO = 0.5         # Menor passo -> mais pontos na trajetória
+PARADA = 5          # Distância de redução da velocidade antes da curva
 
-# Condições do ambiente (Nome, Velocidade, Altura):
+# Condições de cada ambiente (Nome, Velocidade, Altura):
 FLORESTA = ["Floresta", 5, 5]
 CIDADE = ["Cidade", [3, 5], [9, 10]]
 DESERTO = ["Deserto", 8, 3]
@@ -30,21 +29,21 @@ class Drone(Turtle):
         self.x_init = float(input("Posição inicial em x: ")) * METRO
         self.y_init = float(input("Posição inicial em y: ")) * METRO
 
-        # Escreve o nome do Drone
+        # Escreve na tela o nome do Drone
         self.penup()
         self.goto(-150,350)
         self.pendown()
         self.write(f"Drone Selecionado: {self.nome}", font="Verdana", align="right")
         self.penup()
 
-        # Desenha ponto inicial
+        # Desenha o ponto inicial
         self.penup()
         self.goto(self.x_init, self.y_init)
         self.pendown()
         self.dot(DOTSIZE2, "red")
         self.penup()
 
-        # Desenha ponto final da primeira trajetória
+        # Desenha o ponto final da primeira trajetória
         self.final_position()
 
         # Configura o x e y iniciais
@@ -58,7 +57,7 @@ class Drone(Turtle):
         self.delta_x = (self.x_goal - self.x_init)
         self.delta_y = (self.y_goal - self.y_init)
 
-        # Desenha ponto final de qualquer trajetória
+        # Desenha o ponto final de qualquer trajetória
         self.penup()
         self.goto(self.x_goal, self.y_goal)
         self.pendown()
@@ -75,7 +74,7 @@ class Drone(Turtle):
         else:
             self.ambiente = DESERTO
 
-        print(f"O ambiente é: {self.ambiente[0]}")
+        print(f"O ambiente é: {self.ambiente[0]}.")
 
     def arm_drone(self):
         # Função que arma o drone para decolagem
@@ -87,6 +86,7 @@ class Drone(Turtle):
             print(f"Altura de {self.ambiente[2]}m atingida.")
 
     def trajetoria(self):
+        # Definição dos parâmetros de cada Trajetória
         self.dist = (self.delta_x**2 + self.delta_y**2)**(1/2)
         self.cosseno = self.delta_x / self.dist
         self.seno = self.delta_y / self.dist
@@ -119,7 +119,7 @@ class Drone(Turtle):
         # No Deserto
         else:
             self.vel = self.ambiente[1]
-            print(f"A velocidade do drone é: {self.vel}m/s")
+            print(f"A velocidade do drone é: {self.vel}m/s.")
             self.num_pontos = int(self.dist // (self.vel*METRO*PASSO))
             return self.num_pontos
 
@@ -128,6 +128,7 @@ class Drone(Turtle):
         if self.sorteio == 1:
             self.x = self.x_init + self.raio * (self.cosseno * (1 - math.cos(self.phi)) + self.seno * math.sin(self.phi))
             self.y = self.y_init - self.raio * (self.seno * (math.cos(self.phi) - 1) + self.cosseno * math.sin(self.phi))
+            
             self.goto(self.x, self.y)
             self.pendown()
             self.dot(DOTSIZE1, "green")
@@ -156,12 +157,13 @@ class Drone(Turtle):
         else:
             self.x += (self.vel*METRO) * PASSO * self.cosseno
             self.y += (self.vel*METRO) * PASSO * self.seno
+            
             self.goto(self.x, self.y)
             self.pendown()
             self.dot(DOTSIZE1, "orange")
             self.penup()
 
-        print(f"{self.nome} está em: ({round(self.x/METRO, 2)}, {round(self.y/METRO, 2)})")
+        print(f"{self.nome} está em: ({round(self.x/METRO, 2)}, {round(self.y/METRO, 2)}).")
 
     def nova_entrega(self):
         # Reseta os parâmetros de posição para nova entrega
@@ -176,7 +178,7 @@ def main():
     print("Bem vindo ao simulador de package Delivery!")
 
     # Inicialização da Tela
-    screen = turtle.Screen()
+    screen = Screen()
     screen.setup(height=SCREEN_SIZE, width=SCREEN_SIZE)
     screen.tracer(0)
     screen.bgcolor("white")
@@ -185,7 +187,8 @@ def main():
     # Inicialização do Drone
     drone = Drone()
     time.sleep(2)
-
+    
+    # Loop de entregas
     terminou = False
     while not terminou:
         drone.choose_enviroment()
@@ -196,7 +199,8 @@ def main():
 
         num_pontos = drone.trajetoria()
         time.sleep(1)
-
+        
+        # Loop de controle
         i = 0
         chegou = False
         while not chegou:
