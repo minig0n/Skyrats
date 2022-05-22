@@ -64,7 +64,7 @@ class Drone(Turtle):
         self.dot(DOTSIZE2, "red")
         self.penup()
 
-    def choose_enviroment(self):
+    def choose_environment(self):
         # Sorteia o Ambiente
         self.sorteio = random.randint(1,3)
         if self.sorteio == 1:
@@ -191,7 +191,7 @@ def main():
     # Loop de entregas
     terminou = False
     while not terminou:
-        drone.choose_enviroment()
+        drone.choose_environment()
         time.sleep(1)
 
         drone.arm_drone()

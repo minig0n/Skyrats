@@ -1,19 +1,24 @@
 // Your First C++ Program
 
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
-float area_triangulo(float b, float h);
 
-int main() {
-    float base, altura;
-    cout << "Insira o tamanho da base: ";
-    cin >> base;
-    cout << "Insira o tamanho da altura: ";
-    cin >> altura;
-    cout << "Area: " << area_triangulo(base, altura) << endl;
-    return 0;
+void troca_ab(int *p1, int *p2) {
+    int temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+
+    return;
 }
 
-float area_triangulo(float b, float h){
-    return b * h / 2;
+int main() {
+    int a, b;
+    a = 0;
+    b = 1;
+    cout << "a = " << a << " b = " << b << endl;
+    troca_ab( &a, &b );
+    cout << "a = " << a << " b = " << b << endl;
+
+    return 0;
 }
