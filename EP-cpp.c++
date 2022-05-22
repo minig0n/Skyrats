@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <cmath>
 using namespace std;
-void choose_environment(int, int, string, string);
 
 void choose_environment(string *environment, string *tra, int *speed, int *height){
     int random_number;
